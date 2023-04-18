@@ -1,0 +1,26 @@
+{% extends "login.html" %} {% block title %}Home{% endblock %} {% block content
+%}
+
+<style>
+  .card {
+    margin: 50px;
+  }
+</style>
+{%for item in sched%}
+<div class="card">
+  <h5 class="card-header">{{item.title}}</h5>
+  <div class="card-body">
+    <h5 class="card-title">
+      Leave Time: {{item.startTime}} <br />
+      Arrival Time: {{item.endTime}}
+    </h5>
+    <p class="card-text">Seats Left: {{item.seatsLeft}}</p>
+    <p class="card-text">Price: {{item.price}} L.E</p>
+
+    <form method="POST" >
+      <input type="hidden" name="price" id= "price" value= "{{ item.price }} ">
+      <button type="submit" class="btn btn-primary">Reserve</button>
+    </form>
+  </div>
+</div>
+{% endfor %} {% endblock %}

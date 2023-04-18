@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block title %}Subscribe{% endblock %} {% block
+content %}
+<form method="POST">
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                      <h3 class="card-title text-center mb-4 text-primary">Subscribe</h3>
+                        <h2> Our subscription policy is that user get 20% free of whatever they paid in advance! </h2>
+                      <div class="form-group">
+                        <label for="price">Amount in EGP:</label>
+                        <input
+                          type="number"
+                          class="form-control"
+                          min="50" step="100"
+                          id="price"
+                          name="price"
+                          placeholder="Enter amount in EGP"
+                        />
+                      </div>
+
+
+                       <button type="submit" class="btn btn-primary btn-block mt-4">Pay!</button>
+                  <br/>
+                         </div>
+                       <br />
+                       <br />
+
+
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+</form>
+{% endblock %}
