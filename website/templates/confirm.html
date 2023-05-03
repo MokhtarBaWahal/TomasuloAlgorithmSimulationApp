@@ -7,7 +7,12 @@ content %}
                 <div class="card">
                     <div class="card-body">
                       <h3 class="card-title text-center mb-4 text-primary">Thank you!</h3>
+                        {%if Is_cancel==0 %}
                         <h2> Your payment was confirmed! </h2>
+                        {% else %}
+                        <h2> Your ticket was cancelled. </h2>
+                        <h3> Money will be refunded to your Monorail account in two working days.</h3>
+                        {% endif %}
 
                          </div>
                        <br />

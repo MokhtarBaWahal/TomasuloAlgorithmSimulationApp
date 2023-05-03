@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+%}
+
+ <div class="container mt-5">
+      <div class="row justify-content-center">
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <div class="form-group">
+                <label >Enter your street or neighborhood:</label>
+
+
+                 <br />
+                <form method="POST" action="/4">
+                <input
+                  type="text"
+                  class="form-control"
+                  id="address"
+                  name="address"
+                  placeholder="Enter address"
+                />
+                        <button type= "submit" class="btn btn-primary mb-3">
+                            <span class="ps-3">Search</span>
+
+                        </button>
+
+                    </form>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+ </div>
+
+
+{% endblock %}
