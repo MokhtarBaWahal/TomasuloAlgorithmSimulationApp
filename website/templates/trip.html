@@ -6,15 +6,13 @@
     margin: 50px;
   }
 </style>
-              <br>
-              <form method="POST">
-
-
-                  <a type="button" class="btn btn-primary btn-lg btn-block" id = "4" href="/4">
-                      Click here to search about close lines to you, or view the full list of lines below.
-                  </a>
-
-              </form>
+<br />
+<form method="POST">
+  <a type="button" class="btn btn-primary btn-lg btn-block" id="4" href="/4">
+    Click here to search about close lines to you, or view the full list of
+    lines below.
+  </a>
+</form>
 {%for item in sched%}
 <div class="card">
   <h5 class="card-header">{{item.title}}</h5>
@@ -26,9 +24,17 @@
     <p class="card-text">Seats Left: {{item.seatsLeft}}</p>
     <p class="card-text">Price: {{item.price}} L.E</p>
 
-    <form method="POST" action ="/1">
-        <input type="hidden" name="search1" id= "search1" value= "line">
-      <input type="hidden" name="price" id= "price" value= "{{ item.price }} ">
+    <form method="POST" action="/1">
+      <input type="hidden" name="search1" id="search1" value="line" />
+      <input type="hidden" name="price" id="price" value="{{ item.price }} " />
+      <input type="hidden" name="title" id="title" value="{{ item.title }} " />
+      <input
+        type="hidden"
+        name="start"
+        id="start"
+        value="{{ item.startTime }} "
+      />
+      <input type="hidden" name="end" id="end" value="{{ item.endTime }} " />
       <button type="submit" class="btn btn-primary">Reserve</button>
     </form>
   </div>

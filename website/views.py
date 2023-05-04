@@ -1,4 +1,4 @@
-import mysql.connector
+#import mysql.connector
 from flask import Blueprint, render_template, request, flash, jsonify, session, url_for
 from flask_login import login_required, current_user
 
@@ -60,7 +60,10 @@ def view_1():
              ]
     if request.method == 'POST':
         price = request.form.get('price')
-        return render_template("payment.html", user=current_user, price=price)
+        title = request.form.get('title')
+        start = request.form.get('start')
+        end = request.form.get('end')
+        return render_template("payment.html", user=current_user,   price = price, title = title, start = start, end = end)
 
     return render_template("trip.html", user=current_user, sched=sched)
 
@@ -70,7 +73,7 @@ def view_2():
     records = []
 
     if request.method == 'POST':
-        price = request.form.get('price')
+        ticket = request.form.get('price')
         return render_template("payment.html", user=current_user, price=price)
 
     return render_template("subscri.html", user=current_user, records=records)
@@ -137,6 +140,10 @@ def pay():
 
     if request.method == 'POST':
         price = request.form.get('price')
-        return render_template("confirm.html", user=current_user, Is_cancel=0)
+        title = request.form.get('title')
+        start = request.form.get('start')
+        end = request.form.get('end')
 
-    return render_template("payment.html", user=current_user, records=records)
+        return render_template("confirm.html", user=current_user, Is_cancel=0, price = price, title = title, start = start, end = end)
+
+    return render_template("payment.html", user=current_user, records=records,  price = price, title = title, start = start, end = end)
