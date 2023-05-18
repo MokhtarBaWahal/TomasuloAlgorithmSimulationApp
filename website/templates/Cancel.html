@@ -1,4 +1,4 @@
-{% extends "login.html" %} {% block title %}Home{% endblock %}
+{% extends "login.html" %} {% block title %}Cancel a ticket{% endblock %}
 
 {% block content %}
 
@@ -6,7 +6,11 @@
         <div class="card px-4">
             <p class="h8 py-3">Ticket Details</p>
             <div class="row gx-3">
+
                 <div class="col-12">
+                     <p class="h8 py-3" >Cancellation fee is 20% of the ticket price.</p>
+                    <form method="POST" >
+                                        <div class="col-12">
                     <div class="d-flex flex-column">
                         <p class="text mb-1">Passenger Name</p>
                         <input class="form-control mb-3" type="text" placeholder="First and last name" required>
@@ -15,16 +19,12 @@
                 <div class="col-12">
                     <div class="d-flex flex-column">
                         <p class="text mb-1">Ticket Number</p>
-                        <input class="form-control mb-3" type="text" placeholder="10 digits">
+                        <input class="form-control mb-3" type="text" name="number" id="number" placeholder="10 digits" required>
                     </div>
                 </div>
-
-                <div class="col-12">
-                    <form method="POST" >
                         <input type="hidden" name="price" id= "price" value= "{{price}} ">
                         <button type= "submit" class="btn btn-primary mb-3">
                             <span class="ps-3">Confirm Cancellation</span>
-
                         </button>
 
                     </form>

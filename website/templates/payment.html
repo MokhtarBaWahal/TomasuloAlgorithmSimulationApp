@@ -53,8 +53,21 @@
             <input type="hidden" name="start" id="start" value="{{ start }} " />
             <input type="hidden" name="end" id="end" value="{{ end }} " />
             <span class="ps-3">Pay {{price}} EGP</span>
-            <span class="fas fa-arrow-right"></span>
+
+
           </button>
+          {% if current_user.is_authenticated %}
+
+          <button type="submit" class="btn btn-primary mb-3">
+            <input type="hidden" name="search1" id="search1" value="line" />
+            <input type="hidden" name="price" id="price" value="{{ price }} " />
+            <input type="hidden" name="title" id="title" value="{{ title }} " />
+            <input type="hidden" name="start" id="start" value="{{ start }} " />
+            <input type="hidden" name="end" id="end" value="{{ end }} " />
+            <span class="ps-3">Pay {{price}} EGP from Balance</span>
+
+          </button>
+          {% endif %}
         </form>
       </div>
     </div>

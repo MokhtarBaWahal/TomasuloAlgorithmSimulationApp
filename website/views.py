@@ -1,12 +1,8 @@
-#import mysql.connector
+# import mysql.connector
+import random
+
 from flask import Blueprint, render_template, request, flash, jsonify, session, url_for
 from flask_login import login_required, current_user
-
-from werkzeug.utils import redirect
-
-from website.models import Note
-from website._init_ import db
-import json
 
 views = Blueprint('views', __name__)
 
@@ -22,7 +18,6 @@ def home():
     return render_template("home.html", user=current_user)
 
 
-sched = []
 
 
 @views.route('/1', methods=['GET', 'POST'])
@@ -63,7 +58,7 @@ def view_1():
         title = request.form.get('title')
         start = request.form.get('start')
         end = request.form.get('end')
-        return render_template("payment.html", user=current_user,   price = price, title = title, start = start, end = end)
+        return render_template("payment.html", user=current_user, price=price, title=title, start=start, end=end)
 
     return render_template("trip.html", user=current_user, sched=sched)
 
@@ -74,7 +69,7 @@ def view_2():
 
     if request.method == 'POST':
         ticket = request.form.get('price')
-        return render_template("payment.html", user=current_user, price=price)
+        return render_template("payment.html", user=current_user)
 
     return render_template("subscri.html", user=current_user, records=records)
 
@@ -82,7 +77,10 @@ def view_2():
 @views.route('/3', methods=['GET', 'POST'])
 def view_3():
     if request.method == 'POST':
-
+        tick_num =  request.form.get('number')
+        if tick_num=="0000000000000000":
+            flash('Sorry, not ticket not found.', category='error')
+            return render_template("Cancel.html", user=current_user)
         return render_template("confirm.html", user=current_user, Is_cancel=1)
 
     return render_template("Cancel.html", user=current_user)
@@ -126,9 +124,9 @@ def view_4():
         for i, element in enumerate(listx):
             if any(address in item for item in element):
                 result.append(sched[i])
-        if len(result)==0:
+        if len(result) == 0:
             flash('Sorry, not found try looking for it manually.', category='error')
-            result=sched
+            result = sched
         return render_template("trip.html", user=current_user, sched=result)
 
     return render_template("search.html", user=current_user, sched=sched)
@@ -143,7 +141,9 @@ def pay():
         title = request.form.get('title')
         start = request.form.get('start')
         end = request.form.get('end')
+        number = "6760096139"
 
-        return render_template("confirm.html", user=current_user, Is_cancel=0, price = price, title = title, start = start, end = end)
+        return render_template("confirm.html", user=current_user, Is_cancel=0, price=price, title=title, start=start,
+                               end=end, number=number)
 
-    return render_template("payment.html", user=current_user, records=records,  price = price, title = title, start = start, end = end)
+    return render_template("payment.html", user=current_user, records=records)
