@@ -1,5 +1,10 @@
 # import mysql.connector
 import random
+import gc
+from .functions import No_Pending_exe
+from .classes import memory, instruction, registers, Reservation_Stations, instructions_q, Reservation_Station
+from .operations import issue, execute, write_back
+from collections import deque
 
 from flask import Blueprint, render_template, request, flash, jsonify, session, url_for
 from flask_login import login_required, current_user
@@ -7,143 +12,107 @@ from flask_login import login_required, current_user
 views = Blueprint('views', __name__)
 
 
-@views.route('/guest', methods=['GET', 'POST'])
-def home_guest():
-    return render_template("home.html", user=current_user)
-
-
 @views.route('/', methods=['GET', 'POST'])
-@login_required
 def home():
-    return render_template("home.html", user=current_user)
-
-
-
-
-@views.route('/1', methods=['GET', 'POST'])
-def view_1():
-    class user:
-        def __init__(self, username, type):
-            self.username = username
-            self.trip_chosen = 0
-            self.type = type
-
-    class Ticket:
-        def __init__(self, title, seatsLeft, startTime, endTime, price, ID, close_to):
-            self.title = title
-            self.seatsLeft = seatsLeft
-            self.startTime = startTime
-            self.endTime = endTime
-            self.price = price
-            self.ID = ID
-            self.close_to = close_to
-
-    sched = [Ticket("Elestad - Hesham Barakat", 5, "9:00 am", "9:30 am", 20, 1, ["CIA", "Sheraton", "Sun City"]),
-             Ticket("Hesham Barakat - Nori Khatab", 12, "9:30 am", "10:00 am", 10, 2,
-                    ["Nasr City", "Serag Mall", "Sun City"]),
-             Ticket("Nori Khatab - El Hay ElSabe3", 2, "10:00 am", "10:30 am", 20, 3, []),
-             Ticket("El Hay ElSabe3 - Zaker Hussien", 5, "10:30 am", "11:00 am", 20, 4, []),
-             Ticket("Zaker Hussien - El Manteka El Hora", 5, "11:00 am", "11:30 am", 20, 5, []),
-             Ticket("El Manteka El Hora - El Mosheer Tantawy", 5, "11:30 am", "12:00 pm", 20, 6, []),
-             Ticket("El Mosheer Tantawy - Cairo Festival", 5, "12:00 pm", "12:30 pm", 20, 7, []),
-             Ticket("Cairo Festival - Elshowayfat", 5, "1:00 pm", "1:30 pm", 20, 8, []),
-             Ticket("Elshowayfat - Air Force Hospital", 5, "1:30 pm", "2:00 pm", 20, 9, []),
-             Ticket("Air Force Hospital - Hay El Narges", 5, "2:00 pm", "2:30 pm", 20, 10, []),
-             Ticket("Hay El Narges - Mohamed Nageeb", 5, "2:30 pm", "3:00 pm", 20, 11, []),
-             Ticket("Mohamed Nageeb - AUC", 5, "3:00 pm", "3:30 pm", 20, 12, ["AUC"]),
-             Ticket("AUC - Emaar", 5, "3:30 pm", "4:00 pm", 20, 13, ["AUC"]),
-             ]
-    if request.method == 'POST':
-        price = request.form.get('price')
-        title = request.form.get('title')
-        start = request.form.get('start')
-        end = request.form.get('end')
-        return render_template("payment.html", user=current_user, price=price, title=title, start=start, end=end)
-
-    return render_template("trip.html", user=current_user, sched=sched)
-
-
-@views.route('/2', methods=['GET', 'POST'])
-def view_2():
-    records = []
-
-    if request.method == 'POST':
-        ticket = request.form.get('price')
-        return render_template("payment.html", user=current_user)
-
-    return render_template("subscri.html", user=current_user, records=records)
-
-
-@views.route('/3', methods=['GET', 'POST'])
-def view_3():
-    if request.method == 'POST':
-        tick_num =  request.form.get('number')
-        if tick_num=="0000000000000000":
-            flash('Sorry, not ticket not found.', category='error')
-            return render_template("Cancel.html", user=current_user)
-        return render_template("confirm.html", user=current_user, Is_cancel=1)
-
-    return render_template("Cancel.html", user=current_user)
-
-
-@views.route('/4', methods=['GET', 'POST'])
-def view_4():
-    class Ticket:
-        def __init__(self, title, seatsLeft, startTime, endTime, price, ID, close_to):
-            self.title = title
-            self.seatsLeft = seatsLeft
-            self.startTime = startTime
-            self.endTime = endTime
-            self.price = price
-            self.ID = ID
-            self.close_to = close_to
-
-    sched = [Ticket("Elestad - Hesham Barakat", 5, "9:00 am", "9:30 am", 20, 1, ["CIA", "Sheraton", "Sun City"]),
-             Ticket("Hesham Barakat - Nori Khatab", 12, "9:30 am", "10:00 am", 10, 2,
-                    ["Nasr City", "Serag Mall", "Sun City"]),
-             Ticket("Nori Khatab - El Hay ElSabe3", 2, "10:00 am", "10:30 am", 20, 3, []),
-             Ticket("El Hay ElSabe3 - Zaker Hussien", 5, "10:30 am", "11:00 am", 20, 4, []),
-             Ticket("Zaker Hussien - El Manteka El Hora", 5, "11:00 am", "11:30 am", 20, 5, []),
-             Ticket("El Manteka El Hora - El Mosheer Tantawy", 5, "11:30 am", "12:00 pm", 20, 6, []),
-             Ticket("El Mosheer Tantawy - Cairo Festival", 5, "12:00 pm", "12:30 pm", 20, 7, []),
-             Ticket("Cairo Festival - Elshowayfat", 5, "1:00 pm", "1:30 pm", 20, 8, []),
-             Ticket("Elshowayfat - Air Force Hospital", 5, "1:30 pm", "2:00 pm", 20, 9, []),
-             Ticket("Air Force Hospital - Hay El Narges", 5, "2:00 pm", "2:30 pm", 20, 10, []),
-             Ticket("Hay El Narges - Mohamed Nageeb", 5, "2:30 pm", "3:00 pm", 20, 11, []),
-             Ticket("Mohamed Nageeb - AUC", 5, "3:00 pm", "3:30 pm", 20, 12, ["AUC"]),
-             Ticket("AUC - Emaar", 5, "3:30 pm", "4:00 pm", 20, 13, ["AUC"]),
-             ]
     if request.method == 'POST':
 
-        address = request.form.get('address')
+        current_clock_cycle = 1
+        branchInst_num = 0
+        branchInst_taken = 0
+        pc = request.form.get('start')
+        lines = request.form.get('code')
+        if pc =="" or lines =="":
+            flash('PC or code should not be empty!', category='error')
+        else:
 
-        listx = []
-        for x in sched:
-            listx.append(x.close_to)
-        result = []
-        for i, element in enumerate(listx):
-            if any(address in item for item in element):
-                result.append(sched[i])
-        if len(result) == 0:
-            flash('Sorry, not found try looking for it manually.', category='error')
-            result = sched
-        return render_template("trip.html", user=current_user, sched=result)
+            regsata = request.form.get('regs')
+            data_mem = request.form.get('mem')
 
-    return render_template("search.html", user=current_user, sched=sched)
+            queue = instructions_q(int(pc))
+            global_pc = int(pc)
+            lines = lines.split("\n")
+            Load_store_queue = deque()
 
+            for inst in lines:
+                queue.insert(instruction(inst))
 
-@views.route('/pay', methods=['GET', 'POST'])
-def pay():
-    records = []
+            Reservation_Stations1 = Reservation_Stations()
+            regs = registers()
+            memory1 = memory()
+            if data_mem != "":
+                mem_data = data_mem.split("\n")
+                for m in mem_data:
+                    prs = m.split(",")
+                    print(prs)
+                    ind = int(prs[0])
+                    d = int(prs[1])
+                    memory1.write(ind, d)
+            if regsata != "":
+                regs_data = regsata.split("\n")
+                for r in regs_data:
+                    prs = r.split(",")
+                    ind = int(prs[0])
+                    d = int(prs[1])
+                    regs.write_register(ind, d)
 
-    if request.method == 'POST':
-        price = request.form.get('price')
-        title = request.form.get('title')
-        start = request.form.get('start')
-        end = request.form.get('end')
-        number = "6760096139"
+            queue.print_insts()
+            while True:
+                # print("PC: " + str(global_pc))
+                branch_taken = False
+                is_issued = False
+                complete = False
+                if global_pc < len(queue):
+                    instruction1 = queue.queue[global_pc]
+                    # instruction.print()
+                    RS_name = instruction1.type
 
-        return render_template("confirm.html", user=current_user, Is_cancel=0, price=price, title=title, start=start,
-                               end=end, number=number)
+                    free_station = Reservation_Stations1.search(RS_name)
 
-    return render_template("payment.html", user=current_user, records=records)
+                    if free_station is not None:
+                        if not branch_taken:
+                            if instruction1.type in ["BNE", "RET", "JAL"]:
+                                branchInst_num += 1
+                            issue(free_station, instruction1, regs, Load_store_queue, current_clock_cycle, global_pc)
+
+                            is_issued = True
+
+                else:
+                    complete = True
+
+                execute(Reservation_Stations1, regs, memory1, Load_store_queue, global_pc, current_clock_cycle)
+
+                result = write_back(Reservation_Stations1, regs, memory1, Load_store_queue, global_pc, current_clock_cycle)
+                if is_issued:
+                    global_pc += 1
+                if result is not None:
+                    branch_taken = True
+                    branchInst_taken += 1
+                    global_pc = result
+
+                if complete and No_Pending_exe(Reservation_Stations1) and not branch_taken:
+                    break
+                else:
+                    current_clock_cycle += 1
+            regs.print_registers()
+            current_clock_cycle += 1
+            ICP = 0
+            for i in queue.queue:
+                if i.write_start_time is not None:
+                    ICP += 1
+                if i.write_start_time is not None:
+                    if i.type in ["RET", "JAL", "BNE"] and i.write_start_time< i.execute_end_time:
+                        i.write_start_time = i.execute_end_time +1
+                    else:
+                        i.write_start_time += 1
+                if i.write_start_time is None:
+                    i.write_start_time = ""
+                if i.issue_start_time is None:
+                    i.issue_start_time = ""
+                if i.execute_start_time is None:
+                    i.execute_start_time = ""
+                if i.execute_end_time is None:
+                    i.execute_end_time = ""
+
+            return render_template("exe.html", regs= regs, data=queue.queue, time=current_clock_cycle, ICP=ICP,
+                                   branchInst_num=branchInst_num, branchInst_taken=branchInst_taken)
+    return render_template("setup.html", user=current_user)

@@ -4,7 +4,7 @@ from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy() 
+db = SQLAlchemy()
 DB_NAME = "project_database.db"
 
 
@@ -36,7 +36,6 @@ def create_app():
         return User.query.filter_by(id=id).first()
 
     return app
-
 
 def create_database(app):
     if not path.exists('website/' + DB_NAME):

@@ -1,0 +1,60 @@
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block content
+%}
+
+ <div class="container mt-5">
+
+      <div class="row justify-content-center">
+          <h1 class="card-title text-center mb-4 text-primary">Tomasulo Algorithm Simulation</h1>
+        <div class="col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h3 class="card-title text-center mb-4 text-primary">Set Up </h3>
+              <form method="POST">
+
+
+              <div class="form-group">
+                <label for="start">Start Address</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="start"
+                  name="start"
+                  placeholder="Enter the start address"
+                />
+              </div>
+              <div class="form-group">
+                  <label for="start">Program code</label>
+                <textarea class="form-control" id="code"
+                  name="code" rows = "3"
+                  placeholder="Write the program code line by line. Instructions supported are LOAD, STORE, ADD, ADDI, NEG, SLL, NAND, BNE, RET, JAL. Also operands should be separated by spaces not commas"></textarea>
+
+              </div>
+                  <div class="form-group">
+                  <label for="start">Registers</label>
+                <textarea class="form-control" id="regs"
+                  name="regs" rows = "2"
+                  placeholder="Write the Registers line by line. Example 4, 53"></textarea>
+
+              </div>
+                  <div class="form-group">
+                  <label for="start">Memory</label>
+                <textarea class="form-control" id="mem"
+                  name="mem" rows = "2"
+                  placeholder="Write the memory line by line. Example 50, 1"></textarea>
+
+              </div>
+              <button type="submit" class="btn btn-primary btn-block mt-4">
+                  Execute
+                </button>
+            </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+     </br>
+      </br>
+ </div>
+
+
+{% endblock %}
